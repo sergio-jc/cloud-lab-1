@@ -1,20 +1,14 @@
-# ☁️ Laboratorio Cloud | LemonCode
+# ☁️ Laboratorio Cloud 1 | LemonCode
 
-URL del despliegue: [https://sergio-jc.github.io/cloud-lab/](https://sergio-jc.github.io/cloud-lab/)
+URL del despliegue: [https://sergio-jc.github.io/cloud-lab-1/](https://sergio-jc.github.io/cloud-lab-1/)
 
-![image](https://github.com/user-attachments/assets/a2c0fb47-b90b-478b-8e0c-9037db098169)
-
+![image](https://github.com/user-attachments/assets/e2e0a1cd-b8d9-4ca3-ae3c-0520aa959480)
 
 ## 📖 Overview
 
-Este laboratorio tiene como objetivo desplegar una aplicación estática en **GitHub Pages** y posteriormente automatizar este proceso utilizando **GitHub Actions**. Para este ejercicio, se ha utilizado **Astro** como generador de sitios estáticos y se han seguido dos fases bien diferenciadas:  
-
-1. **Deploy manual** utilizando el paquete `gh-pages`.
-2. **Automatización del deploy** con un workflow de **GitHub Actions**.
+Este laboratorio tiene como objetivo desplegar una aplicación estática en **GitHub Pages** de forma manual. Para este ejercicio, se ha utilizado **Astro** como generador de sitios estáticos. 
 
 ---
-
-## 📦 Fase 1: Deploy manual con `gh-pages`
 
 ### 📌 Creación del proyecto
 
@@ -32,90 +26,21 @@ Para asegurarme de que el proyecto se generaba correctamente, ejecuté:
 npm run build
 ```
 
-Esto generó la carpeta `dist/` con los archivos estáticos listos para publicar.
+Esto generó la carpeta `dist/` con los archivos estáticos necesarios para usar en Github Pages.
 
-### 📌 Instalación de gh-pages
+### 📌 Creación de la rama `gh-pages`
 
-Se instaló el paquete gh-pages para facilitar el despliegue manual de la carpeta `dist/` en la rama gh-pages del repositorio.
-
-```bash
-npm install --save-dev gh-pages
-```
-
-### 📌 Configuración del script de despliegue
-
-Se añadió el siguiente script en el package.json:
-
-```
-"scripts": {
-  "deploy": "gh-pages -d dist"
-}
-```
-
-### 📌 Publicación manual
-
-Finalmente, se ejecutó el despliegue manual con:
+Una vez obtenemos los ficheros estáticos de la carpeta `/dist` tenemos que subirlos en un rama llamada `gh-pages` para que se inicie el proceso automático de Github Pages para el despliegue de nuestro sitio web.
 
 ```bash
-npm run deploy
+git switch -c "gh-pages"
 ```
+El anterior comando crea y te muve a la rama `gh-pages` donde tendrás que soltar todos los archivos de la carpeta `/dist`.
 
-Esto creó automáticamente la rama gh-pages y publicó el sitio estático en GitHub Pages.
+### 📌 Despliegue automático
 
----
+Para el proceso de desplique simplemente tenemos que publicar la rama con nuestros cambios y se dispararán varios procesos automáticamente que podrás monitorear en la tab Actions de tu repositorio.
 
-## ⚙️ Fase 2: Automatización del deploy con GitHub Actions
+![image](https://github.com/user-attachments/assets/f4b8c2d6-05a3-401c-8f9e-52b932d9dc36)
 
-### 📌 Habilitación de GitHub Pages desde Actions
-
-Antes de configurar la automatización, se habilitó la opción GitHub Actions en la sección Settings > Pages del repositorio, seleccionando el entorno de despliegue correspondiente.
-
-![image](https://github.com/user-attachments/assets/1ecc3ebb-4369-41f6-95e0-7aad3e5ccb27)
-
-
-### 📌 Creación del workflow
-
-Se creó la carpeta `.github/workflows` y dentro de ella, el archivo `cd.yaml`.
-
-### 📌 Estructura del workflow
-
-El workflow se configuró para ejecutarse en cada push a la rama main.
-
-```yml
-name: CD to GH Pages
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  cd:
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-      - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
-```
-
-Con esta configuración, cada vez que se realice un push a la rama main, el workflow se ejecutará automáticamente, generando la build y publicando los cambios en GitHub Pages.
+Al finalizar estos procesos obtendrás el URL del despliegue: [https://sergio-jc.github.io/cloud-lab-1/](https://sergio-jc.github.io/cloud-lab-1/)
